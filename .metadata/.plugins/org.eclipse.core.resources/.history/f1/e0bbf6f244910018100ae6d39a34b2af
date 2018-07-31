@@ -1,0 +1,5 @@
+package com.iinternousdev.exsite.dto;
+
+public class BuyItemDTO {
+
+}

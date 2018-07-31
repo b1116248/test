@@ -1,0 +1,62 @@
+package com.internousdev.webproj5.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.internousdev.webproj5.dto.HelloStrutsDTO;
+import com.internousdev.webproj5.util.DBConnector;
+
+
+public class HelloStrutsDAO {
+
+
+	// HelloStrutsDTO要素をインスタンス化してHelloStrutsDTOの順番を保持する
+	List<HelloStrutsDTO> helloStrutsDTOList = new ArrayList<HelloStrutsDTO>();
+
+
+
+		/*ListHelloStrutsDTO ＝取って来た情報をList化して情報の順番を保持
+		 * DBConnectorをdbへインスタンス化（データベースと接続するために）
+		 * db.Connection（コネクション）を取得してSQL文を実行
+		 * usersから情報を取ってくる
+		 */
+	public List<HelloStrutsDTO> select() {
+		DBConnector db = new DBConnector();
+		Connection con = db.getConnection();
+
+
+		String sql = "select * from users";
+
+
+		/*　sqlからとってきたusersの情報を高速にデータベース接続とsql文実行
+		 *実行結果を格納して
+		 */
+		try {
+			PreparedStatement ps = con.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+
+			while(rs.next()) {
+				HelloStrutsDTO dto=new HelloStrutsDTO();
+				dto.setUserId(rs.getInt("user_id"));
+				dto.setUserName(rs.getString("user_name"));
+				dto.setPassword(rs.getString("password"));
+				dto.setResult("MySQL と接続できます。");
+				helloStrutsDTOList.add(dto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		try {
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return helloStrutsDTOList;
+
+	}
+
+}

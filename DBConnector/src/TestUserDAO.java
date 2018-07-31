@@ -146,7 +146,7 @@ public class TestUserDAO {
 					e.printStackTrace();
 				}
 			}
-			public void dalete(String name){//名前を消す
+			public void dalete(String name){ //名前を消す
 				DBConnector db = new DBConnector();
 				Connection con = db.getConnection();
 

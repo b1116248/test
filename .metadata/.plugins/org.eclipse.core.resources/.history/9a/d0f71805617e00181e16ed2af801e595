@@ -1,0 +1,172 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+
+public class TestUserDAO {
+
+	String name =""; //
+	String password ="";
+
+	public void select(String name,String password){
+		DBConnector db = new DBConnector();
+		Connection con = db.getConnection();
+//通信する
+		String sql ="select * from test_table where user_name=? and password=?";
+		try{//例外が発生する可能性のある処理
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1, name);
+			ps.setString(2, password);
+			ResultSet rs=ps.executeQuery();
+		if(rs.next())
+		{System.out.println(rs.getString("user_name"));
+		System.out.println(rs.getString("password"));
+		}
+
+		}catch(SQLException e ){//例外が発生した場合の処理
+			e.printStackTrace();
+		}
+		try{
+			con.close() ;//通信を切る
+		}catch(SQLException e ){
+			e.printStackTrace();
+		}
+	}
+	public void selectAll(){
+		DBConnector db = new DBConnector();
+		java.sql.Connection con = db.getConnection();
+
+		String sql ="select * from test_table";
+		try{
+			PreparedStatement ps = con.prepareStatement(sql);
+			ResultSet rs=ps.executeQuery();
+			while(rs.next()){
+				System.out.println(rs.getString("user_name"));
+				System.out.println(rs.getString("password"));
+			}
+		}catch (SQLException e ){
+			e.printStackTrace();
+		}
+		try{con.close() ;
+		}catch (SQLException e ){
+			e.printStackTrace();
+		}
+	}
+
+		public void selectByName(String name){ //名前で選択
+			DBConnector db = new DBConnector();
+			Connection con = db.getConnection();
+
+
+			String sql ="select * from test_table where user_name=?";
+			try{
+				PreparedStatement ps = con.prepareStatement(sql);
+				ps.setString(1,  name);
+				ResultSet rs=ps.executeQuery();
+				while (rs.next()){
+					System.out.println(rs.getString("user_name"));
+					System.out.println(rs.getString("password"));
+				}
+			}catch (SQLException e ){
+				e.printStackTrace();
+			}
+			try{
+				con.close();
+				}catch (SQLException e ) {
+					e.printStackTrace();
+				}
+		}
+		public void selectByPassword(String password){ //パスワードで選択
+			DBConnector db = new DBConnector();
+			Connection con = db.getConnection();
+
+
+			String sql ="select * from test_table where password=?";
+			try{
+				PreparedStatement ps =con.prepareStatement(sql);
+				ps.setString(1,  password);
+				ResultSet rs=ps.executeQuery();
+				while(rs.next()){
+					System.out.println(rs.getString("user_name"));
+					System.out.println(rs.getString("password"));
+				}
+			}catch(SQLException e ){
+				e.printStackTrace();
+			}
+			try{
+				con.close();
+			}catch (SQLException e ){
+				e.printStackTrace();
+			}
+		}
+		public void updateUserNameByUserName(String oldName,String newName){ //新しい名前に更新
+			DBConnector db = new DBConnector();
+			Connection con= db.getConnection();
+
+			String sql ="update test_table set user_name=? where user_name=?";
+			try{
+				PreparedStatement ps =con.prepareStatement(sql);
+				ps.setString(1,  newName);
+				ps.setString(2, oldName);
+				int i=ps.executeUpdate();
+				if(i>0){
+					System.out.println(i+"件更新されました");
+				}else{System.out.println("該当するデータはありませんでした");
+				}
+			}catch(SQLException e ){
+				e.printStackTrace();
+			}
+			try{
+				con.close();
+			}catch(SQLException e ){
+				e.printStackTrace();
+			}
+		}
+
+			public void  insert(int user_id,String name, String password){	//値を入れる user_id name password
+				DBConnector db = new DBConnector();
+				Connection con = db.getConnection();
+
+				String sql ="insert into test_table values(?,?,?)";
+				try{
+					PreparedStatement ps = con.prepareStatement(sql);
+					ps.setInt(1,  user_id);
+					ps.setString(2,  name);
+					ps.setString(3,  password);
+					int i=ps.executeUpdate();
+					if(i>0){
+						System.out.println(i+"件登録されました");
+					}
+				}catch(SQLException e ){
+					e.printStackTrace();
+				}
+				try{con.close();
+				}catch(SQLException e ){
+					e.printStackTrace();
+				}
+			}
+			public void dalete(String name){//名前を消す
+				DBConnector db = new DBConnector();
+				Connection con = db.getConnection();
+
+				String sql ="delete from test_table where user_name=?";
+				try{
+					PreparedStatement ps = con.prepareStatement(sql);//値を埋め込むための場所＝prepareStatement
+					ps.setString(1, name);//（1のname)値を設定
+					int i=ps.executeUpdate();//登録する
+					if(i>0){//もしiが0より大きければ
+						System.out.println(i+"件削除されました");
+					}
+				}catch(SQLException e ){//エラーを説明する文字列=Exception
+					e.printStackTrace() ;
+				}
+				try{
+					con.close() ;
+				}catch(SQLException e ){
+					e.printStackTrace() ;
+				}
+			}
+		}
+
+

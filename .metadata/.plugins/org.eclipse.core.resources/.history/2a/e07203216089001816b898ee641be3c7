@@ -1,0 +1,24 @@
+package com.internousdev.webproj5.dao;
+
+import com.internousdev.webproj5.util.DBConnector;
+import com.mysql.jdbc.Connection;
+
+public class InquiryCompleteDAO {
+
+	List<InquiryDTO> inquiryDTOList = new ArrayList<InquiryDTO>();
+
+
+	public List<InquiryDTO> select(){
+		DBConnector db = new DBConnector();
+		Connection con = db.getConnection();
+
+
+		String sql ="select * from inquiry";
+		try{
+			PreparedStatement ps = con.prepareStatement(sql);
+			Result rs = ps.executeQuery
+
+		}catch
+	}
+
+}

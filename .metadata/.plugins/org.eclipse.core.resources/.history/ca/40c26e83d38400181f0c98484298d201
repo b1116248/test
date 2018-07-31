@@ -1,0 +1,27 @@
+package com.internousdev.webproj3.action;
+
+import com.internousdev.webproj3.dao.TestDAO;
+
+public class TestAction  extends ActionSupport{
+	private String username;
+
+	private String password;
+
+	public String execute(){
+		String ret=ERROR;
+		TestDAO dao=new Test DAO();
+		int count=dao.insert(username, password);
+		if(count>0){
+			ret=SUCCESS;
+		}
+		return ret;
+	}
+
+	public String getUsername(){
+		this.username = username;
+	}
+
+	public String getPassword(String password) {
+		this.password = password ;
+	}
+}

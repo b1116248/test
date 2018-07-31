@@ -1,0 +1,76 @@
+package com.internousdev.webproj5.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.internousdev.webproj5.dto.HelloStrutsDTO;
+import com.internousdev.webproj5.util.DBConnector;
+
+
+public class HelloStrutsDAO {
+
+
+	// HelloStrutsDTO要素をインスタンス化してHelloStrutsDTOの順番を保持する
+	List<HelloStrutsDTO> helloStrutsDTOList = new ArrayList<HelloStrutsDTO>();
+
+
+
+		/*ListHelloStrutsDTO ＝取って来た情報をList化して情報の順番を保持
+		 * DBConnectorをdbへインスタンス化（データベースと接続するために）
+		 * db.Connection（コネクション）を取得してSQL文を実行
+		 */
+	public List<HelloStrutsDTO> select() {
+		DBConnector db = new DBConnector();
+		Connection con = db.getConnection();
+
+		//usersから情報を取ってくる
+		String sql = "select * from users";
+
+
+		/*　sqlからとってきたusersの情報を高速にデータベース接続とsql文を実行
+		 *※ PreparedStatementはすでにコンパイルが行われているため処理が早い
+		 *またPreparedStatementを使用したらSQL文を実行すると覚える
+		 *実行結果を格納してResultSet rsオブジェクトに返す
+		 */
+		try {
+			PreparedStatement ps = con.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+
+
+		/*　実行結果rs　次の行へ進んで繰り返す
+		 * 実行結果user_id user_name passwordをとってきてセットする
+		 * helloStrutsDTOListへdtoにセットした情報を追加
+		 */
+			while(rs.next()) {
+				HelloStrutsDTO dto=new HelloStrutsDTO();
+				dto.setUserId(rs.getInt("user_id"));
+				dto.setUserName(rs.getString("user_name"));
+				dto.setPassword(rs.getString("password"));
+				dto.setResult("MySQL と接続できます。");
+				helloStrutsDTOList.add(dto);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		/*処理が終了する可能性がある
+		 * user_id user_name passwordの情報をとってこれなかった場合
+		 * エラーを説明、表示
+		 */
+		try {
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+
+		return helloStrutsDTOList;
+
+	}
+
+}
